@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forex Profit Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+        }
+        form {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 4px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #574caf;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            right: 100%;
+            transform: translateX(200%);  
+        }
+    </style>
+</head>
+<body>
+    <form id="forexCalculatorForm" action="/" method="POST">
+        <label for="currencypair">Currency Pair:</label>
+        <select id="currencypair" name="currencypair" required>
+            {% for pairs in major_forex_pairs %}
+            <option value={{pairs}}>{{pairs}}</option>           
+            {% endfor %}  
+
+
+        </select>
+
+        
+        <label for="tradesize">Trade Size (Lots):</label>
+        <input type="text" id="tradesize" name="tradesize">
+
+        <label for="openprice">Open Price:</label>
+        <input type="text" id="openprice" name="openprice" step="0.01" >
+        <label for="closeprice">Close Price:</label>
+        <input type="text" id="closeprice" name="closeprice" step="0.01">
+        <label for="profit">Ask Price:</label>
+        <input type="text" id="ask" name="ask" value = {{ask_ticker}} readonly>   
+
+        
+        <button type="submit">Calculate</button>
+        <label for="profit">PnL:</label>
+        <input type="text" id="profit" name="profit" value = {{pnl}} readonly>
+    </form>
+ 
+</body>
+</html>

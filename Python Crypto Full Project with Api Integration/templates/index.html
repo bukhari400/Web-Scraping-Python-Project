@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crypto Currency Historical Data</title>
+
+  <!-- Add Bootstrap CSS link -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyO5nFk3DIaS6MIqQooP44EN3tA5b4QJ" crossorigin="anonymous">
+
+</head>
+<style>
+  body{
+    text-align: center;
+    background: url(/static/bg.jpg)no-repeat;
+    background-size: cover;
+    background-position: center;
+  }
+  .bg{
+    background-color: rgba(0, 0, 0, 0.8);
+    width: 100%;
+    padding: 70px 0;
+    height: 700px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  .bg-footer{
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 20px 0;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    
+  }
+  .heading{
+    color: white;
+    font-size: 40px;
+    text-shadow: 5px -1px 0 rgb(0, 97, 149);
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin-bottom: 50px;
+  }
+
+  .form-box{
+    background-color: rgba(0, 0, 0, 0.64);
+    box-shadow: -2px 2px 50px rgb(0, 97, 149);
+  }
+
+  form {
+    max-width: 450px;
+    /* Limit the form width */
+    margin: auto;
+    /* Center the form */
+    padding: 20px;
+    /* Add some padding */
+    border-radius: 10px;
+    /* Rounded corners */
+  }
+
+  .form-control {
+    font-size: 18px;
+    /* Larger font size for form controls */
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: -1px 1px 20px rgb(149, 134, 0);
+    /* Increase margin between form controls */
+  }
+
+  
+
+  #outputBox {
+    
+    font-size: 20px;
+    /* Larger font size for the output box */
+    margin-top: 20px;
+    /* Increase margin between output box and button */
+    border-radius: 10px;
+  }
+
+  h1 {
+    color: #333;
+  }
+
+  button {
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  table {
+    background-color: white;
+    color: rgb(0, 0, 0);
+    border-radius: 10px;
+    font-size: 15px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 20px auto;
+    border-collapse: collapse;
+    text-align: center;
+    /* Center align the table content */
+  }
+
+  th,
+  td {
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  th {
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 10px;
+  }
+  .btn-submitt{
+    padding: 13px 19px;
+    font-size: 14px;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: rgb(216, 177, 0);
+    border-radius: 5px;
+  }
+  .btn-submitt:hover{
+    background-color: rgb(100, 100, 0);
+    transition:0.8s;
+    transform: scale(0.9);
+    
+  }
+  .btn-calculate{
+    padding: 13px 19px;
+    font-size: 16px;
+    width: 100%;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    background-color: rgb(0, 90, 147); 
+    border-radius: 5px;
+  }
+  .btn-calculate:hover{
+    background-color: rgb(0, 53, 100);
+    transition:0.8s;
+    transform: scale(0.9);
+    
+  }
+  .graphs{
+    position: absolute;
+    top: 70%;
+    left: 5%;
+    right: 5%;
+    border-radius: 20px;
+    box-shadow: 5px 5px 0 rgb(0, 97, 149);
+  }
+  .footer{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-size: 20px;
+    color: white;
+  }
+
+</style>
+
+<body>
+  <div class="bg">
+    <h1 class="heading">Crypto Currency Historical Data</h1>
+    <form action="/" method="post" class="form-box">
+      <div class="mb-3 form-input">
+        <label for="calculationDropdown" class="form-label">Select Calculation</label>
+        <!-- Add a dropdown menu for calculations -->
+        <select class="form-control" id="calculationDropdown" name="calculationDropdown" required>
+          <option value="1">Mean Daily Returns</option>
+          <option value="2">Median Daily Returns</option>
+          <option value="3">Standard Deviation of Daily Returns</option>
+          <option value="4">Max Returns Date</option>
+          <option value="5">Min Returns Date</option>
+          <option value="6">Correlation Matrix</option>
+          <option value="7">Plot Historical Prices</option>
+          <option value="8">Plot Historical BarChart</option>
+
+        </select>
+        <button type="submit" class="btn-submitt">Submit</button>
+        
+      </div>
+      <!-- Add more input fields and elements as needed -->
+      <div id="plot-container"></div>
+      <!-- Add a button for calculations -->
+      <button type="button" class="btn-calculate" onclick="displayDictionary()">Calculate</button>
+
+      <!-- Output box for displaying results -->
+      {% if val_polt %}
+      {% if his %}
+      <div>
+        <img src="/static/bitcoin_plot.png" class="graphs" alt="historical prices"
+          style="width:700px;height:400px;display: block; margin: auto;">
+      </div>
+      {% else %}
+      <div>
+        <img src="/static/bar_plot.png" class="graphs"  alt="historical prices"
+          style="width:700px;height:400px;display: block; margin: auto;">
+
+      </div>
+
+      {% endif %}
+      {% else %}
+      <table  id="outputTable">
+        <p id="table-Heading" style = "color :white;  font-family: Verdana, Geneva, Tahoma, sans-serif; font-size: 16px;" ></p>
+
+      </table>  
+      {% endif %}
+
+    </form>
+
+    <!-- Add Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"
+      integrity="sha384-qZoZ1KKtbqVNxjP6zUqFZrrOxKc/N4QA8Wd5n6GAPJo9gGdVdtC5x9Rw4B6ZD2J"
+      crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8sh+WyO5nFk3DIaS6MIqQooP44EN3tA5b4QJ"
+      crossorigin="anonymous"></script>
+
+    <!-- Add your script for handling calculations -->
+    <script>
+      function displayDictionary() {
+        // Access the dictionary from the Jinja template variable
+        const dictionary = JSON.parse('{{ data | tojson | e | safe }}');
+
+        // Create a table element
+        const table = document.getElementById('outputTable')
+        const tableHeading=document.getElementById('table-Heading')
+        table.innerHTML = '';
+        tableHeading.innerHTML = "Output Box"
+        // Create table header
+        const headerRow = table.insertRow();
+        const headerCell1 = headerRow.insertCell(0);
+        const headerCell2 = headerRow.insertCell(1);
+        headerCell1.innerHTML = '<b>Ticker Info</b>';
+        headerCell2.innerHTML = '<b>Result</b>';
+
+        // Populate the table with dictionary key-value pairs
+        for (const [key, value] of Object.entries(dictionary)) {
+          const row = table.insertRow();
+          const cell1 = row.insertCell(0);
+          const cell2 = row.insertCell(1);
+          cell1.textContent = key;
+          cell2.textContent = value;
+        }
+      }
+    </script>
+    
+  </div>
+  <footer class="bg-footer">
+    <div class="footer">
+      &copy All Rights Reserved Made By Abdullah Jabbar | Syed Ali Nawab | Sami Imran
+    </div>
+  </footer>
+</body>
+
+</html>

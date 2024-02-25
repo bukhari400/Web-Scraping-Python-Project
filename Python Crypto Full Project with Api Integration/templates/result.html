@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC-USD Close Price Line Chart</title>
+    <!-- Include Chart.js library -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="btcChart" width="800" height="400"></canvas>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+    // Read BTC-USD CSV and create line chart
+            fetch('hello.csv')
+                .then(response => response.text())
+                .then(data => {
+                    const rows = data.split('\n');
+                    const labels = [];
+                    const closePrices = [];
+                
+                    // Parse CSV data
+                    for (let i = 1; i < rows.length; i++) { // Start from index 1 to skip header row
+                        const columns = rows[i].split(',');
+                        const date = columns[0];
+                        const closePrice = parseFloat(columns[4].replace(/[^0-9.-]/g, '')); // Assuming the close price is in the 5th column
+                    
+                        if (!isNaN(closePrice)) { // Skip rows with missing or invalid close prices
+                            labels.unshift(date); // Reverse order to show the latest date on the right
+                            closePrices.unshift(closePrice); // Reverse order to match labels
+                        }
+                    }
+                
+                    // Create a line chart
+                    const ctx = document.getElementById('btcChart').getContext('2d');
+                    const btcChart = new Chart(ctx, {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'Close',
+                                data: closePrices,
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1,
+                                pointRadius: 0  // Hide data points for a smoother line
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                x: {
+                                    type: 'time',
+                                    time: {
+                                        unit: 'day', // Adjust time scale as needed
+                                        tooltipFormat: 'll', // Format for tooltip
+                                        displayFormats: {
+                                            day: 'MMM D' // Format for x-axis labels
+                                        }
+                                    }
+                                },
+                                y: {
+                                    beginAtZero: false
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching BTC-USD CSV:', error));
+        });     
+
+    </script>
+</body>
+</html>
